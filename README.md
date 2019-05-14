@@ -1,2 +1,2 @@
-# sandogh
-Simple Image storage for Fandogh PaaS 
+### Sandogh
+> Simple Image storage for Fandogh PaaS 

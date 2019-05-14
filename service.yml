@@ -1,0 +1,40 @@
+kind: ExternalService
+name: sandogh
+spec:
+  image: ahmdrz/sandogh:latest
+  image_pull_policy: Always
+  replicas: 1  
+  allow_http: true
+
+  port: 8080
+
+  env:
+    - name: "SERVICE_BASE_DIRECTORY"
+      value: "/var/storage"
+    - name: "SERVICE_LISTEN_ADDR"
+      value: "0.0.0.0:8080"
+    - name: "SERVICE_SECRET_KEY"
+      value: "${secret_key}"
+      hidden: true
+
+  volume_mounts:
+    - mount_path: "/var/storage"
+      sub_path: storage
+      volume_name: images
+
+  resources:
+    memory: 128Mi
+
+  liveness_probe:
+    initial_delay_seconds: 12
+    period_seconds: 60
+    http_get:
+      path: "/status"
+      port: 8080
+
+  readiness_probe:
+    initial_delay_seconds: 5
+    period_seconds: 10
+    http_get:
+      path: "/status"
+      port: 8080
