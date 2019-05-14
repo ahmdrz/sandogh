@@ -1,6 +1,14 @@
 ### Sandogh
 > Simple Image storage for Fandogh PaaS 
 
+##### Available HTTP methods
+
+The format of URi is like `/files/:directory/:name`. So if your domain is for example `fandogh.cloud` your final request is `fandogh.cloud/files/:directory/:name`. In any cases, `Authentication` header is your secret key.
+
+1. GET an image from your storage.
+2. POST an image to your storage (Authentication header needed).
+3. DELETE an image from your storage (Authentication header needed).
+
 ##### Local installation using Docker
 
 ```
