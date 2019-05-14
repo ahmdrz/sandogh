@@ -30,9 +30,9 @@ func Initialize() (*Server, error) {
 
 	files := engine.Group("/files", s.authMiddleware(), s.directoryCheck())
 	{
+		files.GET("/:directory/:name", s.getHandler)
 		files.POST("/:directory/:name", s.postHandler)
 		files.DELETE("/:directory/:name", s.deleteHandler)
-		files.GET("/:directory/:name", s.getHandler)
 	}
 	s.engine = engine
 

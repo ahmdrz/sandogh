@@ -26,13 +26,16 @@ func (s *Server) directoryCheck() gin.HandlerFunc {
 
 func (s *Server) authMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("Authentication")
-		if token != s.config.SecretKey {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"status":  "forbidden",
-				"message": "Forbidden access to this method",
-			})
-			return
+		method := ctx.Request.Method
+		if method == "POST" || method == "DELETE" {
+			token := ctx.GetHeader("Authentication")
+			if token != s.config.SecretKey {
+				ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+					"status":  "forbidden",
+					"message": "Forbidden access to this method",
+				})
+				return
+			}
 		}
 		ctx.Next()
 	}
