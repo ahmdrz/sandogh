@@ -1,5 +1,5 @@
 ### Sandogh
-> Simple Image storage for Fandogh PaaS 
+> Simple Image storage for Fandogh PaaS with cache support for your browsers.
 
 ##### Available HTTP methods
 
