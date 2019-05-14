@@ -3,7 +3,7 @@
 
 ##### Available HTTP methods
 
-The format of URi is like `/files/:directory/:name`. So if your domain is for example `fandogh.cloud` your final request is `fandogh.cloud/files/:directory/:name`. In any cases, `Authentication` header is your secret key.
+The format of URi is like `/files/:directory/:name`. So if your domain is for example `fandogh.cloud` your final URL is `fandogh.cloud/files/:directory/:name`. In any cases, `Authentication` header is your secret key.
 
 1. GET an image from your storage.
 2. POST an image to your storage (Authentication header needed).
@@ -14,7 +14,7 @@ The format of URi is like `/files/:directory/:name`. So if your domain is for ex
 ```
 $ docker pull ahmdrz/sandogh:latest
 $ docker run -p 8080:8080 \
-             -e SERVICE_SECRET_KEY='18561b13c56b' \
+             -e SERVICE_SECRET_KEY='<storage secret key>' \
              -e SERVICE_BASE_DIRECTORY='/var/storage' \
              -v storage:/var/storage ahmdrz/sandogh:latest 
 ```
