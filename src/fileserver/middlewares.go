@@ -33,6 +33,7 @@ func (s *Server) authMiddleware() gin.HandlerFunc {
 				ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 					"status":  "forbidden",
 					"message": "Forbidden access to this method",
+					"method":  method,
 				})
 				return
 			}
