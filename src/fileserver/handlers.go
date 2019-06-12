@@ -1,8 +1,7 @@
 package fileserver
 
 import (
-	"crypto/md5"
-	"encoding/hex"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -13,19 +12,21 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kalafut/imohash"
 )
-
-func getMD5Hash(text string) string {
-	hasher := md5.New()
-	hasher.Write([]byte(text))
-	return hex.EncodeToString(hasher.Sum(nil))
-}
 
 func (s *Server) getHandler(ctx *gin.Context) {
 	filePath := s.getFilePath(ctx)
 
-	checksum := getMD5Hash(filePath)
-	eTagKey := `"` + checksum + `"`
+	bytes, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Printf("Error on %s: %v", filePath, err)
+		ctx.String(http.StatusInternalServerError, "Something went wrong !")
+		return
+	}
+
+	checksum := imohash.Sum(bytes)
+	eTagKey := fmt.Sprintf(`"%s"`, checksum)
 	ctx.Header("Cache-Control", "max-age=1209600")
 	ctx.Header("Etag", eTagKey)
 	if match := ctx.GetHeader("If-None-Match"); match != "" {
@@ -33,13 +34,6 @@ func (s *Server) getHandler(ctx *gin.Context) {
 			ctx.Writer.WriteHeader(http.StatusNotModified)
 			return
 		}
-	}
-
-	bytes, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		log.Printf("Error on %s: %v", filePath, err)
-		ctx.String(http.StatusInternalServerError, "Something went wrong !")
-		return
 	}
 
 	contentType := http.DetectContentType(bytes)
