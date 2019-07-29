@@ -1,6 +1,8 @@
 package fileserver
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -12,8 +14,13 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kalafut/imohash"
 )
+
+func getMD5Hash(b []byte) string {
+	hasher := md5.New()
+	hasher.Write(b)
+	return hex.EncodeToString(hasher.Sum(nil))
+}
 
 func (s *Server) getHandler(ctx *gin.Context) {
 	filePath := s.getFilePath(ctx)
@@ -25,7 +32,7 @@ func (s *Server) getHandler(ctx *gin.Context) {
 		return
 	}
 
-	checksum := imohash.Sum(bytes)
+	checksum := getMD5Hash(bytes)
 	eTagKey := fmt.Sprintf(`"%s"`, checksum)
 	ctx.Header("Cache-Control", "max-age=1209600")
 	ctx.Header("Etag", eTagKey)
